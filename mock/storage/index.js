@@ -1,16 +1,24 @@
 const path = require('path');
+const fs = require('fs');
 const _ = require('lodash');
 const stringify = require('fast-json-stable-stringify');
 const Datastore = require('nedb');
 const promisify = require('../../utils/promisify')
 
+const dataBaseDir = path.resolve(__dirname);
 const getDb = _.memoize(function (method) {
-  const base = path.resolve(__dirname, 'data', method);
+  const base = path.resolve(dataBaseDir, 'data', method);
   return {
     opts: new Datastore({ filename: path.resolve(base, 'opts'), autoload: true }),
     data: new Datastore({ filename: path.resolve(base, 'data'), autoload: true }),
   };
 })
+
+fs.watch(dataBaseDir, event => {
+  if (event === 'rename') {
+    getDb.cache.clear();
+  }
+});
 
 function getId(db, opts = []) {
   const query = stringify(opts);
