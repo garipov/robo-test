@@ -7,6 +7,36 @@ import api from '../api/browser'
 
 const percent = (value, percent) => value * (1 + percent / 100);
 
+const tickColumns = [
+  {
+    Header: "Time (T)",
+    accessor: "T",
+  },
+  {
+    Header: "Open (O)",
+    accessor: "O",
+  },
+  {
+    Header: "Close (C)",
+    accessor: "C",
+  },
+  {
+    Header: "Low (L)",
+    accessor: "L",
+  },
+  {
+    Header: "High (H)",
+    accessor: "H",
+  },
+  {
+    Header: "? (V)",
+    accessor: "V",
+  },
+  {
+    Header: "? (BV)",
+    accessor: "BV",
+  },
+]
 export default class extends React.Component {
   state = {
     candles: [],
@@ -178,9 +208,14 @@ export default class extends React.Component {
                 onChange={e => this.updateMacd({ macdSignalPeriods: e.target.value })} />
             </label>
             <label>
-              Поле <input
+              Поле
+              <select
                 value={macdField}
-                onChange={e => this.updateMacd({ macdField: e.target.value })} />
+                onChange={e => this.updateMacd({ macdField: e.target.value })} >
+                {tickColumns.map(t => (
+                  <option value={t.id || t.accessor} key={t.id || t.accessor}>{t.Header}</option>
+                ))}
+              </select>
             </label>
           </div>
         </div>
@@ -193,36 +228,7 @@ export default class extends React.Component {
             columns={[
               {
                 Header: 'Тики (ticks)',
-                columns: [
-                  {
-                    Header: "Time (T)",
-                    accessor: "T",
-                  },
-                  {
-                    Header: "Open (O)",
-                    accessor: "O",
-                  },
-                  {
-                    Header: "Close (C)",
-                    accessor: "C",
-                  },
-                  {
-                    Header: "Low (L)",
-                    accessor: "L",
-                  },
-                  {
-                    Header: "High (H)",
-                    accessor: "H",
-                  },
-                  {
-                    Header: "? (V)",
-                    accessor: "V",
-                  },
-                  {
-                    Header: "? (BV)",
-                    accessor: "BV",
-                  },
-                ]
+                columns: tickColumns
               },
               {
                 Header: 'MACD',
